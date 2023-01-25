@@ -22,5 +22,53 @@ namespace SharpMonoInjector.Gui.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AssemblyPath {
+            get {
+                return ((string)(this["AssemblyPath"]));
+            }
+            set {
+                this["AssemblyPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string InjectNamespace {
+            get {
+                return ((string)(this["InjectNamespace"]));
+            }
+            set {
+                this["InjectNamespace"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string InjectClassName {
+            get {
+                return ((string)(this["InjectClassName"]));
+            }
+            set {
+                this["InjectClassName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Load")]
+        public string InjectMethodName {
+            get {
+                return ((string)(this["InjectMethodName"]));
+            }
+            set {
+                this["InjectMethodName"] = value;
+            }
+        }
     }
 }

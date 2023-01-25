@@ -11,6 +11,7 @@ using Microsoft.Win32;
 using SharpMonoInjector.Gui.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Timers;
 
 namespace SharpMonoInjector.Gui.ViewModels
 {
@@ -26,6 +27,13 @@ namespace SharpMonoInjector.Gui.ViewModels
             InjectCommand = new RelayCommand(ExecuteInjectCommand, CanExecuteInjectCommand);
             EjectCommand = new RelayCommand(ExecuteEjectCommand, CanExecuteEjectCommand);
             CopyStatusCommand = new RelayCommand(ExecuteCopyStatusCommand);
+
+            AssemblyPath = Properties.Settings.Default.AssemblyPath;
+            InjectNamespace = Properties.Settings.Default.InjectNamespace;
+            InjectClassName = Properties.Settings.Default.InjectClassName;
+            InjectMethodName = Properties.Settings.Default.InjectMethodName;
+
+            InitSettingsTimer();
         }
 
         #region[Commands]
@@ -322,6 +330,8 @@ namespace SharpMonoInjector.Gui.ViewModels
                 Set(ref _assemblyPath, value);
                 if (File.Exists(_assemblyPath))
                     InjectNamespace = Path.GetFileNameWithoutExtension(_assemblyPath);
+                Properties.Settings.Default.AssemblyPath = _assemblyPath;
+                NotifySaveSettings();
                 InjectCommand.RaiseCanExecuteChanged();
             }
         }
@@ -334,6 +344,8 @@ namespace SharpMonoInjector.Gui.ViewModels
             {
                 Set(ref _injectNamespace, value);
                 EjectNamespace = value;
+                Properties.Settings.Default.InjectNamespace = _injectNamespace;
+                NotifySaveSettings();
             }
         }
 
@@ -345,6 +357,8 @@ namespace SharpMonoInjector.Gui.ViewModels
             {
                 Set(ref _injectClassName, value);
                 EjectClassName = value;
+                Properties.Settings.Default.InjectClassName = _injectClassName;
+                NotifySaveSettings();
                 InjectCommand.RaiseCanExecuteChanged();
             }
         }
@@ -358,6 +372,8 @@ namespace SharpMonoInjector.Gui.ViewModels
                 Set(ref _injectMethodName, value);
                 if (_injectMethodName == "Load")
                     EjectMethodName = "Unload";
+                Properties.Settings.Default.InjectMethodName = _injectMethodName;
+                NotifySaveSettings();
                 InjectCommand.RaiseCanExecuteChanged();
             }
         }
@@ -549,6 +565,30 @@ namespace SharpMonoInjector.Gui.ViewModels
 
         #endregion
 
+        #region [Save Settings Timer]
+
+        private Timer _settingsTimer;
+        private void InitSettingsTimer()
+        {
+            // 0.62 seconds should be enough time to finish typing.
+            _settingsTimer = new Timer(700);
+            _settingsTimer.AutoReset = false;
+            _settingsTimer.Elapsed += OnSettingsTimerComplete;
+        }
+        private void NotifySaveSettings()
+        {
+            if (_settingsTimer == null)
+                return;
+            // Restart
+            _settingsTimer.Stop();
+            _settingsTimer.Start();
+        }
+        private void OnSettingsTimerComplete(Object source, ElapsedEventArgs e)
+        {
+            Properties.Settings.Default.Save();
+        }
+
+        #endregion
     }
 }
 
